@@ -285,6 +285,7 @@ func processFile(filename string, info fs.FileInfo, in io.Reader, r *reporter, e
 		return err
 	}
 
+	removeBlankLinesImport(fileSet, file)
 	ast.SortImports(fileSet, file)
 
 	// Apply gofumpt's changes before we print the code in gofumpt's format.
@@ -624,4 +625,38 @@ func backupFile(filename string, data []byte, perm fs.FileMode) (string, error) 
 	}
 
 	return bakname, err
+}
+
+func removeBlankLinesImport(fset *token.FileSet, f *ast.File) {
+	for _, decl := range f.Decls {
+		d, ok := decl.(*ast.GenDecl)
+		if !ok || d.Tok != token.IMPORT {
+			// Not an import declaration, so we're done.
+			// Imports are always first.
+			break
+		}
+		if !d.Lparen.IsValid() {
+			// Not a block: sorted by default.
+			continue
+		}
+
+		// var index token.Pos
+		for i := 1; i < len(d.Specs); i++ {
+			s, ok := d.Specs[i].(*ast.ImportSpec)
+			if !ok {
+				break
+			}
+			lastLine := fset.PositionFor(d.Specs[i-1].Pos(), false).Line
+			if fset.PositionFor(s.Pos(), false).Line != lastLine+1 {
+				fset.File(s.Pos()).MergeLine(lastLine + 1)
+			}
+			if s.Name != nil {
+				s.Name.NamePos = d.Specs[i-1].End() + 2
+				s.Path.ValuePos = s.Name.End() + 1
+			} else {
+				s.Path.ValuePos = d.Specs[i-1].End() + 2
+			}
+			d.Specs[i] = s
+		}
+	}
 }
