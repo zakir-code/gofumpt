@@ -29,10 +29,10 @@ import (
 	"golang.org/x/sync/semaphore"
 	exec "golang.org/x/sys/execabs"
 
-	gformat "mvdan.cc/gofumpt/format"
-	"mvdan.cc/gofumpt/go1.19/go/printer"
-	"mvdan.cc/gofumpt/internal/diff"
-	"mvdan.cc/gofumpt/internal/version"
+	gformat "github.com/zakir-code/gofumpt/format"
+	"github.com/zakir-code/gofumpt/go1.19/go/printer"
+	"github.com/zakir-code/gofumpt/internal/diff"
+	"github.com/zakir-code/gofumpt/internal/version"
 )
 
 var (

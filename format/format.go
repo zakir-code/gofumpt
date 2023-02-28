@@ -25,8 +25,8 @@ import (
 	"golang.org/x/mod/semver"
 	"golang.org/x/tools/go/ast/astutil"
 
-	"mvdan.cc/gofumpt/go1.19/go/format"
-	"mvdan.cc/gofumpt/internal/version"
+	"github.com/zakir-code/gofumpt/go1.19/go/format"
+	"github.com/zakir-code/gofumpt/internal/version"
 )
 
 // Options is the set of formatting options which affect gofumpt.

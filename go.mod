@@ -1,4 +1,4 @@
-module mvdan.cc/gofumpt
+module github.com/zakir-code/gofumpt
 
 go 1.18
 
